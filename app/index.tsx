@@ -17,18 +17,13 @@ const doomsdayCenturyDecks = splitIntoDecks(doomsdayCenturyData);
 const doomsdayYearOfCenturyDecks = splitIntoDecks(doomsdayYearOfCenturyData);
 
 interface UserProgress {
-  monthCompleted: boolean;
-  centuryCompleted: boolean;
-  yearOfCenturyCompleted: boolean;
+  monthCompletedID: number[];
+  centuryCompletedID: number[];
+  yearOfCenturyCompletedID: number[];
 }
 
 export default function Index() {
-  const { setCurrentDeck } = useDeckStore();
-  const [userProgress, setUserProgress] = useState<UserProgress>({
-    monthCompleted: true,
-    centuryCompleted: false,
-    yearOfCenturyCompleted: false,
-  });
+  const { setCurrentDeck, userProgress, isCompleted } = useDeckStore();
 
   const handleMonthPress = (deck: FlashcardData[]) => {
     setCurrentDeck(deck, "Month");
@@ -50,12 +45,12 @@ export default function Index() {
       <View style={styles.sectionContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            disabled={!userProgress.monthCompleted}
+            disabled={!isCompleted("monthCompletedID", 1)}
             onPress={() => handleMonthPress(doomsdayMonthData)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Month</Text>
-            {!userProgress.monthCompleted && (
+            {!isCompleted("monthCompletedID", 1) && (
               <Ionicons name="lock-closed" size={24} color="gray" />
             )}
           </TouchableOpacity>
@@ -63,9 +58,16 @@ export default function Index() {
         <View style={styles.partsContainer}>
           {doomsdayMonthDecks.map((deck, idx) => (
             <TouchableOpacity
-              style={styles.extraMonthButton}
+              style={[
+                styles.extraMonthButton,
+                {
+                  backgroundColor: isCompleted("monthCompletedID", deck.id)
+                    ? "white"
+                    : "gray",
+                },
+              ]}
               key={idx}
-              disabled={!userProgress.monthCompleted}
+              disabled={!isCompleted("monthCompletedID", deck.id)}
               onPress={() => handleMonthPress(deck.cards)}
             >
               <Text style={styles.buttonText}>{idx + 1}</Text>
@@ -76,12 +78,12 @@ export default function Index() {
       <View style={styles.sectionContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            disabled={!userProgress.monthCompleted}
-            onPress={() => handleMonthPress(doomsdayMonthData)}
+            disabled={!isCompleted("centuryCompletedID", 1)}
+            onPress={() => handleCenturyPress(doomsdayCenturyData)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Century</Text>
-            {!userProgress.centuryCompleted && (
+            {!isCompleted("centuryCompletedID", 1) && (
               <Ionicons name="lock-closed" size={24} color="gray" />
             )}
           </TouchableOpacity>
@@ -89,9 +91,16 @@ export default function Index() {
         <View style={styles.partsContainer}>
           {doomsdayCenturyDecks.map((deck, idx) => (
             <TouchableOpacity
-              style={styles.extraMonthButton}
+              style={[
+                styles.extraMonthButton,
+                {
+                  backgroundColor: isCompleted("centuryCompletedID", deck.id)
+                    ? "white"
+                    : "gray",
+                },
+              ]}
               key={idx}
-              disabled={!userProgress.centuryCompleted}
+              disabled={!isCompleted("centuryCompletedID", deck.id)}
               onPress={() => handleCenturyPress(deck.cards)}
             >
               <Text style={styles.buttonText}>{idx + 1}</Text>
@@ -102,12 +111,12 @@ export default function Index() {
       <View style={styles.sectionContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            disabled={!userProgress.yearOfCenturyCompleted}
+            disabled={!isCompleted("yearOfCenturyCompletedID", 1)}
             onPress={() => handleYearOfCenturyPress(doomsdayYearOfCenturyData)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Year of Century</Text>
-            {!userProgress.yearOfCenturyCompleted && (
+            {!isCompleted("yearOfCenturyCompletedID", 1) && (
               <Ionicons name="lock-closed" size={24} color="gray" />
             )}
           </TouchableOpacity>
@@ -115,9 +124,19 @@ export default function Index() {
         <View style={styles.partsContainer}>
           {doomsdayYearOfCenturyDecks.map((deck, idx) => (
             <TouchableOpacity
-              style={styles.extraMonthButton}
+              style={[
+                styles.extraMonthButton,
+                {
+                  backgroundColor: isCompleted(
+                    "yearOfCenturyCompletedID",
+                    deck.id
+                  )
+                    ? "white"
+                    : "gray",
+                },
+              ]}
               key={idx}
-              disabled={!userProgress.yearOfCenturyCompleted}
+              disabled={!isCompleted("yearOfCenturyCompletedID", deck.id)}
               onPress={() => handleYearOfCenturyPress(deck.cards)}
             >
               <Text style={styles.buttonText}>{idx + 1}</Text>

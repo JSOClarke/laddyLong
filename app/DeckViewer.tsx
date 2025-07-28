@@ -13,25 +13,14 @@ interface AnswerPrompt {
   isEasy: boolean;
 }
 
-interface UserProgress {
-  monthCompleted: boolean;
-  centuryCompleted: boolean;
-  yearOfCenturyCompleted: boolean;
-}
-
 export default function DeckViewer() {
-  const { currentDeck, currentDeckName } = useDeckStore();
+  const { currentDeck, currentDeckName, updateUserProgress } = useDeckStore();
   const [currentFlashcard, setCurrentFlashcard] =
     useState<FlashcardData | null>(null);
   const [isNextClicked, setIsNextClicked] = useState<boolean>(false);
   const [isEasy, setIsEasy] = useState<boolean | null>(null);
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState<number>(0);
   const [answerPrompts, setAnswerPrompts] = useState<AnswerPrompt[]>([]);
-  const [userProgress, setUserProgress] = useState<UserProgress>({
-    monthCompleted: true,
-    centuryCompleted: false,
-    yearOfCenturyCompleted: false,
-  });
 
   function handleFinish() {
     router.push({
